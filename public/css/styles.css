@@ -1,0 +1,44 @@
+/* General table styling */
+#transactions-table {
+    width: 100%; /* Make the table span the entire container */
+    border-collapse: collapse; /* Avoid double borders */
+    margin: 20px 0; /* Add spacing above and below the table */
+    font-size: 16px; /* Make text readable */
+    text-align: left; /* Align text to the left */
+}
+
+/* Table header styling */
+#transactions-table thead th {
+    background-color: #f4f4f4; /* Light gray background for header */
+    color: #333; /* Darker text color for better contrast */
+    font-weight: bold;
+    padding: 10px 15px; /* Add padding to header cells */
+    border: 1px solid #ddd; /* Add borders for separation */
+}
+
+/* Table row styling */
+#transactions-table tbody tr {
+    border: 1px solid #ddd; /* Add borders for rows */
+    padding: 10px; /* Add padding to each cell */
+}
+
+/* Table cell styling */
+#transactions-table tbody td {
+    padding: 10px 15px; /* Add padding to each cell */
+}
+
+/* Alternating row colors for better readability */
+#transactions-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+/* Hover effect for rows */
+#transactions-table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Center-align specific columns */
+#transactions-table tbody td:nth-child(5),
+#transactions-table tbody td:nth-child(6) {
+    text-align: center; /* Center align the amount and date */
+}

@@ -1,0 +1,122 @@
+<h1>All Transactions</h1>
+<table id="transactions-table">
+    <thead>
+        <tr>
+            <th>Transaction ID</th>
+            <th>User Name</th>
+            <th>Category Name</th>
+            <th>Category Type</th>
+            <th>Amount</th>
+            <th>Date</th>
+            <th>Description</th>
+            <th>Tags</th>
+            <th>Delete</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each data}}
+        <tr data-value="{{this.transactionID}}">
+            <td>{{this.transactionID}}</td>
+            <td>{{this.userName}}</td>
+            <td>{{this.categoryName}}</td>
+            <td>{{this.categoryType}}</td>
+            <td>{{this.amount}}</td>
+            <td>{{this.formatted_date}}</td>
+            <td>{{this.description}}</td>
+            <td>{{this.tags}}</td>
+            <td><button onclick="deleteTransaction({{this.transactionID}})">Delete</button></td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+<script src="./js/delete_transaction.js"></script>
+
+
+
+{{!-- Form to add a record to the table --}}
+<h2>Adding Data with AJAX</h2>
+<p>To add a new person, please enter their information below and click 'Submit'!</p>
+<form id="add-person-form-ajax">
+    <label for="input-fname">First Name: </label>
+    <input type="text" name="input-fname" id="input-fname">
+
+    <label for="input-lname">Last Name: </label>
+    <input type="text" name="input-lname" id="input-lname">
+
+
+    <label for="input-homeworld">Homeworld: </label>
+    <select name="input-homeworld" id="input-homeworld">
+        <option value="">Select a Planet</option>
+        {{#each planets}}
+        <option value="{{this.id}}">{{this.name}}</option>
+        {{/each}}
+    </select>
+
+    <label for="input-age">Age: </label>
+    <input type="number" name="input-age" id="input-age">
+
+    <input type="submit">
+</form>
+
+{{!-- Embed our javascript to handle the DOM manipulation and AJAX request --}}
+<script src="./js/add_person.js"></script>
+
+<h2>Search Using an HTML Form</h2>
+<p>Search by last name using the field below. Partial last names are OK too!</p>
+<form id="search-person-html" method='GET' action='/'>
+    <label for="input-lname">Search by Last Name: </label>
+    <input type="text" name="lname" id="input-lname-html-search">
+
+    <input type="submit">
+    <a href='/'><button>Reset</button></a>
+</form>
+
+{{!-- Form to add a record to the table using standard HTML forms --}}
+<h2>Adding Data using an HTML form</h2>
+<p>To add a new person, please enter their information below and click `Submit`!</p>
+<form id="add-person-form" method="POST" action="/add-person-form">
+    <label for="input-fname">First Name: </label>
+    <input type="text" name="input-fname" id="input-fname-html">
+
+    <label for="input-lname">Last Name: </label>
+    <input type="text" name="input-lname" id="input-lname-html">
+
+    <label for="input-homeworld">Homeworld: </label>
+    <select name="input-homeworld" id="input-homeworld-html">
+        <option value="">Select a Planet</option>
+        {{#each planets}}
+        <option value="{{this.id}}">{{this.name}}</option>
+        {{/each}}
+    </select>
+
+    <label for="input-age">Age: </label>
+    <input type="number" name="input-age" id="input-age-html">
+
+    <input type="submit">
+</form>
+
+<h2>Updating A User's HomeWorld Form</h2>
+<p>To update a specific user's homeworld select their name from the drop-down menu on the left and their desired
+    homeworld from the drop down menu on the right</p>
+<form id="update-person-form-ajax">
+
+    <label for="input-fullname">Full name: </label>
+    <select name="input-fullname" id="mySelect">
+        <option value="test">Select a Person</option>
+        {{#each data}}
+        <option value="{{this.id}}">{{this.fname}} {{this.lname}}</option>
+        {{/each}}
+    </select>
+
+    <label for="input-homeworld">Homeworld: </label>
+    <select name="input-homeworld" id="input-homeworld-update">
+        <option>Select a Planet</option>
+        {{#each planets}}
+        <option value="{{this.id}}">{{this.name}}</option>
+        {{/each}}
+    </select>
+    <input type="submit">
+
+</form>
+
+<script src="./js/update_person.js"></script>

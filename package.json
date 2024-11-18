@@ -1,0 +1,26 @@
+{
+  "name": "personal-finance-app",
+  "version": "1.0.0",
+  "description": "340-portfolio-full-stack-project-personal-finance-app",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/v0611/Personal-Finance-App.git"
+  },
+  "author": "Vy Nguyen, Julia Brandenberger",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/v0611/Personal-Finance-App/issues"
+  },
+  "homepage": "https://github.com/v0611/Personal-Finance-App#readme",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "express-handlebars": "^8.0.1",
+    "forever": "^4.0.3",
+    "mysql": "^2.18.1"
+  }
+}
