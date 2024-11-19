@@ -7,6 +7,8 @@ var app = express();            // We need to instantiate an express object to i
 PORT = 9234;                 // Set a port number at the top so it's easy to change in the future
 // Database
 var db = require('./database/db-connector');
+const transactionTagsRoutes = require('./routes/transactionTagsRoutes');
+
 
 // Test Database Connection
 db.pool.query('SELECT 1', function (err, results) {
@@ -63,6 +65,9 @@ app.get('/', function (req, res) {
         return res.render('index', { data: rows });
     });
 });
+
+app.use('/transactiontags', transactionTagsRoutes);
+
 
 
 // POST ROUTES
