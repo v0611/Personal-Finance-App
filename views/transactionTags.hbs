@@ -18,10 +18,10 @@
     </tbody>
 </table>
 
-<h2>Adding Data with AJAX</h2>
-<p>To add a new transaction with tags, please select a transaction</p>
-<form id="add-new-transactiontag" action="/transactiontags/add" method="POST">
-    <label for="transaction">Transaction:</label>
+<h2>Adding Tags to an existing Transaction</h2>
+<p>To add a new tags for an existing transaction, please select a transaction</p>
+<form id="add-new-transactiontag">
+    <label for="transactionID">Transaction:</label>
     <select name="transactionID" id="transactionID">
         <option value="">Select a Transaction</option>
         {{#each transactions}}
@@ -29,14 +29,14 @@
         {{/each}}
     </select>
 
-    <label for="tag">Tag:</label>
+    <label for="tagID">Tag:</label>
     <select name="tagID" id="tagID">
         <option value="">Select a Tag</option>
         {{#each tags}}
         <option value="{{this.id}}">{{this.tagName}}</option>
         {{/each}}
     </select>
-    
+
     <button type="submit">Add</button>
 </form>
-
+<script src="/js/add_transactionTags.js"></script>

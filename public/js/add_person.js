@@ -5,7 +5,9 @@ let addPersonForm = document.getElementById('add-person-form-ajax');
 addPersonForm.addEventListener("submit", function (e) {
     
     // Prevent the form from submitting
-    e.preventDefault();
+    e.preventDefault();   
+    console.log("Form submitted event captured");
+
 
     // Get form fields we need to get data from
     let inputFirstName = document.getElementById("input-fname");
