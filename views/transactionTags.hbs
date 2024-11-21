@@ -1,3 +1,9 @@
+{{!
+/* Code citation
+Date: 11/20/2024
+Adapted: all code adapted from starter app
+From: cs340-nodejs-starter-app
+*/}}
 <h1>View and update Tags for Transactions - TransactionTags junction table</h1>
 <table id="transactiontags">
     <thead>
@@ -5,6 +11,7 @@
             <th>Transaction ID</th>
             <th>Transaction Description</th>
             <th>Tags</th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -13,6 +20,10 @@
             <td>{{this.transactionID}}</td>
             <td>{{this.description}}</td>
             <td>{{this.tags}}</td>
+            <td>
+                <button class="delete-btn" data-id="{{this.transactionID}}">Delete</button>
+                <button class="update-btn" data-id="{{this.transactionID}}">Update</button>
+            </td>
         </tr>
         {{/each}}
     </tbody>
@@ -39,4 +50,7 @@
 
     <button type="submit">Add</button>
 </form>
+
 <script src="/js/add_transactionTags.js"></script>
+<script src="/js/delete_transactionTags.js"></script>
+

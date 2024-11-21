@@ -1,4 +1,8 @@
-
+/* Code citation
+Date: 11/20/2024
+Adapted: SETUP AND LISTENER code
+From: cs340-nodejs-starter-app
+*/
 /*
     SETUP
 */
@@ -36,107 +40,38 @@ app.use(express.static('public'))
 
 // GET route
 app.get('/', function (req, res) {
-    let query1 = `
-        SELECT 
-            Transactions.transactionID, 
-            Users.userName, 
-            Categories.categoryName, 
-            Categories.categoryType,
-            Transactions.amount, 
-            DATE_FORMAT(Transactions.date, '%m/%d/%Y') AS formatted_date, 
-            Transactions.description,
-            GROUP_CONCAT(Tags.tagName) AS tags
-        FROM Transactions
-        JOIN Users ON Transactions.userID = Users.userID
-        LEFT JOIN Categories ON Transactions.categoryID = Categories.categoryID
-        LEFT JOIN TransactionTags ON Transactions.transactionID = TransactionTags.transactionID
-        LEFT JOIN Tags ON TransactionTags.tagID = Tags.tagID
-        GROUP BY Transactions.transactionID;
-    `;
+    res.redirect('/transactiontags')
+    // let query1 = `
+    //     SELECT 
+    //         Transactions.transactionID, 
+    //         Users.userName, 
+    //         Categories.categoryName, 
+    //         Categories.categoryType,
+    //         Transactions.amount, 
+    //         DATE_FORMAT(Transactions.date, '%m/%d/%Y') AS formatted_date, 
+    //         Transactions.description,
+    //         GROUP_CONCAT(Tags.tagName) AS tags
+    //     FROM Transactions
+    //     JOIN Users ON Transactions.userID = Users.userID
+    //     LEFT JOIN Categories ON Transactions.categoryID = Categories.categoryID
+    //     LEFT JOIN TransactionTags ON Transactions.transactionID = TransactionTags.transactionID
+    //     LEFT JOIN Tags ON TransactionTags.tagID = Tags.tagID
+    //     GROUP BY Transactions.transactionID;
+    // `;
 
-    // Execute the query
-    db.pool.query(query1, function (error, rows, fields) {
-        if (error) {
-            console.error("Error executing query: ", error);
-            return res.status(500).send("Error retrieving transactions.");
-        }
+    // // Execute the query
+    // db.pool.query(query1, function (error, rows, fields) {
+    //     if (error) {
+    //         console.error("Error executing query: ", error);
+    //         return res.status(500).send("Error retrieving transactions.");
+    //     }
 
-        // Pass the formatted data to the template
-        return res.render('index', { data: rows });
-    });
+    //     // Send the result to render in handlebard file 
+    //     return res.render('index', { data: rows });
+    // });
 });
 
 app.use('/transactiontags', transactionTagsRoutes);
-
-
-// DELETE ROUTE
-app.delete('/delete-person-ajax/', function (req, res, next) {
-    let data = req.body;
-    let personID = parseInt(data.id);
-    let deleteBsg_Cert_People = `DELETE FROM bsg_cert_people WHERE pid = ?`;
-    let deleteBsg_People = `DELETE FROM bsg_people WHERE id = ?`;
-
-
-    // Run the 1st query
-    db.pool.query(deleteBsg_Cert_People, [personID], function (error, rows, fields) {
-        if (error) {
-
-            // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
-            console.log(error);
-            res.sendStatus(400);
-        }
-
-        else {
-            // Run the second query
-            db.pool.query(deleteBsg_People, [personID], function (error, rows, fields) {
-
-                if (error) {
-                    console.log(error);
-                    res.sendStatus(400);
-                } else {
-                    res.sendStatus(204);
-                }
-            })
-        }
-    })
-});
-
-app.put('/put-person-ajax', function (req, res, next) {
-    let data = req.body;
-
-    let homeworld = parseInt(data.homeworld);
-    let person = parseInt(data.fullname);
-
-    let queryUpdateWorld = `UPDATE bsg_people SET homeworld = ? WHERE bsg_people.id = ?`;
-    let selectWorld = `SELECT * FROM bsg_planets WHERE id = ?`
-
-    // Run the 1st query
-    db.pool.query(queryUpdateWorld, [homeworld, person], function (error, rows, fields) {
-        if (error) {
-
-            // Log the error to the terminal so we know what went wrong, and send the visitor an HTTP response 400 indicating it was a bad request.
-            console.log(error);
-            res.sendStatus(400);
-        }
-
-        // If there was no error, we run our second query and return that data so we can use it to update the people's
-        // table on the front-end
-        else {
-            // Run the second query
-            db.pool.query(selectWorld, [homeworld], function (error, rows, fields) {
-
-                if (error) {
-                    console.log(error);
-                    res.sendStatus(400);
-                } else {
-                    res.send(rows);
-                }
-            })
-        }
-    })
-});
-
-
 
 /*
     LISTENER

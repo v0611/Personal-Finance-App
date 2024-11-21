@@ -1,3 +1,9 @@
+/* Code citation
+Date: 11/20/2024
+Adapted: fetching data 
+From: cs340-nodejs-starter-app
+*/
+
 const express = require('express');
 const router = express.Router();
 const db = require('../database/db-connector');
@@ -59,7 +65,7 @@ router.post('/add', function (req, res) {
     // Capture the incoming data
     let data = req.body;
 
-    // Capture NULL values for transactionID and tagID
+    // Capture and check for NULL values for transactionID and tagID
     let transactionID = parseInt(data.transactionID);
     if (isNaN(transactionID)) {
         transactionID = 'NULL';
@@ -107,5 +113,38 @@ router.post('/add', function (req, res) {
         })
     })
 })
+
+// DELETE /transactionTags/delete
+router.delete('/delete', function (req, res) {
+    let transactionID = req.body.transactionID;
+    console.log('delete route: ', transactionID)
+
+    // Check if transactionID is valid
+    if (!transactionID) {
+        console.error('Transaction ID is missing.');
+        return res.status(400).json({ error: 'Transaction ID is required.' });
+    }
+
+    const deleteQuery = `
+        DELETE FROM TransactionTags 
+        WHERE transactionID = ${transactionID};
+    `;
+
+    db.pool.query(deleteQuery, function (error, results) {
+        if (error) {
+            console.error('Error deleting transaction tag:', error);
+            return res.status(500).json({ error: 'Failed to delete transaction tag.' });
+        }
+
+        if (results.affectedRows === 0) {
+            console.warn('No matching record with given ID.');
+            return res.status(404).json({ error: 'Transaction tag record not found.' });
+        }
+
+        console.log(`Transaction tag with ID ${transactionID} deleted successfully.`);
+        res.status(200).json({ message: 'Transaction tag deleted successfully.' });
+    });
+});
+
 
 module.exports = router;
