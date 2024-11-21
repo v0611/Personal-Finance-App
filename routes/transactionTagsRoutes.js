@@ -1,3 +1,4 @@
+
 /* Code citation
 Date: 11/20/2024
 Adapted: fetching data 
@@ -62,10 +63,9 @@ router.get('/', function (req, res) {
 
 router.post('/add', function (req, res) {
     console.log('CREATE request received:', req.body)
-    // Capture the incoming data
     let data = req.body;
 
-    // Capture and check for NULL values for transactionID and tagID
+    // NULL check for transactionID and tagID
     let transactionID = parseInt(data.transactionID);
     if (isNaN(transactionID)) {
         transactionID = 'NULL';
@@ -88,7 +88,7 @@ router.post('/add', function (req, res) {
     db.pool.query(query1, function (error, rows, fields) {
         if (error) {
             console.error('Error inserting transaction tag:', error);
-            return res.sendStatus(400); // Bad request
+            return res.sendStatus(400); 
         }
 
         console.log('Insertion successful');
