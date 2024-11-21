@@ -18,8 +18,9 @@ addTransactionTagsForm.addEventListener("submit", function (e) {
         transactionID: inputTransaction.value,
         tagID: inputTag.value,
     };
+    console.log('Data being sent:', data)
 
-    // Sends a POST request to the /transactiontags/add endpoint
+    // Send a POST request to the /transactiontags/add endpoint
     fetch('/transactiontags/add', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -32,10 +33,10 @@ addTransactionTagsForm.addEventListener("submit", function (e) {
             return response.json();
         })
         .then(updatedData => {
-            console.log('Updated Data:', updatedData);
+            console.log('Server response:', updatedData);
 
-            // Update only the specific row in the table
-            updateAffectedRow(updatedData);
+            // Update the table with the newly added record
+            addNewTagRow(updatedData);
 
             // Clear the form fields
             inputTransaction.value = '';
@@ -44,15 +45,26 @@ addTransactionTagsForm.addEventListener("submit", function (e) {
         .catch(error => console.error('Error:', error));
 });
 
-// Function to update the table dynamically
-function updateAffectedRow(data) {
+// Function to add a new row to the table
+function addNewTagRow(data) {
     data.forEach(row => {
-        // Get the affected row 
-        let affectedRow = document.querySelector(`tr[data-value="${row.transactionID}"]`);
-        if (affectedRow) {
-            // Update the tags column only (third column)
-            let tagsCell = affectedRow.querySelector("td:nth-child(3)");
-            tagsCell.textContent = row.tags; // represents the text inside an element
-        }
+        // Find the table body
+        let tableBody = document.querySelector("#transactiontags tbody");
+
+        // Create a new row
+        let newRow = document.createElement("tr");
+        newRow.setAttribute("data-value", row.transactionID);
+
+        // Populate the new row with data
+        newRow.innerHTML = `
+            <td>${row.transactionID}</td>
+            <td>${row.description}</td>
+            <td>${row.tagName}</td>
+            <td><button class="delete-btn" data-id="${row.transactionID}">Delete</button></td>
+            <td><button class="update-btn" data-id="${row.transactionID}">Update</button></td>
+        `;
+
+        // Append the new row to the table
+        tableBody.appendChild(newRow);
     });
 }

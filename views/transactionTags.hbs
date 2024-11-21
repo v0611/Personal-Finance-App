@@ -5,13 +5,15 @@ Adapted: all code adapted from starter app
 From: cs340-nodejs-starter-app
 */}}
 <h1>View and update Tags for Transactions - TransactionTags junction table</h1>
+
 <table id="transactiontags">
     <thead>
         <tr>
             <th>Transaction ID</th>
             <th>Transaction Description</th>
-            <th>Tags</th>
-            <th>Actions</th>
+            <th>Tag</th>
+            <th>Delete</th>
+            <th>Delete</th>
         </tr>
     </thead>
     <tbody>
@@ -19,11 +21,13 @@ From: cs340-nodejs-starter-app
         <tr data-value="{{this.transactionID}}">
             <td>{{this.transactionID}}</td>
             <td>{{this.description}}</td>
-            <td>{{this.tags}}</td>
+            <td>{{this.tagName}}</td>
             <td>
-                <button class="delete-btn" data-id="{{this.transactionID}}">Delete</button>
-                <button class="update-btn" data-id="{{this.transactionID}}">Update</button>
+                <button class="delete-btn" data-transaction-id="{{this.transactionID}}" data-tag-id="{{this.tagID}}">
+                    Delete
+                </button>
             </td>
+            <td><button class="update-btn" data-id="{{this.transactionID}}">Update</button></td>
         </tr>
         {{/each}}
     </tbody>
@@ -53,4 +57,3 @@ From: cs340-nodejs-starter-app
 
 <script src="/js/add_transactionTags.js"></script>
 <script src="/js/delete_transactionTags.js"></script>
-

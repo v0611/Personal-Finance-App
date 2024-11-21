@@ -14,12 +14,11 @@ router.get('/', function (req, res) {
         SELECT 
             t.transactionID,
             t.description,
-            GROUP_CONCAT(tg.tagName SEPARATOR ', ') AS tags
+            tg.tagID,
+            tg.tagName
         FROM TransactionTags tt
         JOIN Transactions t ON tt.transactionID = t.transactionID
         JOIN Tags tg ON tt.tagID = tg.tagID
-        GROUP BY t.transactionID, t.description
-        ORDER BY t.transactionID;
     `;
 
     const transactionsQuery = `
@@ -62,6 +61,7 @@ router.get('/', function (req, res) {
 });
 
 router.post('/add', function (req, res) {
+    console.log('CREATE request received:', req.body)
     // Capture the incoming data
     let data = req.body;
 
@@ -75,49 +75,56 @@ router.post('/add', function (req, res) {
     if (isNaN(tagID)) {
         tagID = 'NULL';
     }
-    console.log('Trans ID:', transactionID)
-    console.log('Tag ID: ', tagID)
 
+    console.log('Trans ID:', transactionID);
+    console.log('Tag ID:', tagID);
+
+    // Insert the new tag into the TransactionTags table
     let query1 = `
         INSERT INTO TransactionTags (transactionID, tagID) 
         VALUES (${transactionID}, ${tagID});
-        `;
+    `;
 
     db.pool.query(query1, function (error, rows, fields) {
         if (error) {
             console.error('Error inserting transaction tag:', error);
             return res.sendStatus(400); // Bad request
         }
-        console.log('Insertion successful')
 
-        // Insertion successful - Fetch the updated transaction tags
+        console.log('Insertion successful');
+
+        // Fetch the newly added transaction tag
         const query2 = `
             SELECT 
-            t.transactionID,
-            t.description,
-            GROUP_CONCAT(tg.tagName SEPARATOR ', ') AS tags
+                t.transactionID,
+                t.description,
+                tg.tagID,
+                tg.tagName
             FROM TransactionTags tt
             JOIN Transactions t ON tt.transactionID = t.transactionID
             JOIN Tags tg ON tt.tagID = tg.tagID
-            GROUP BY t.transactionID, t.description
-            ORDER BY t.transactionID;
+            WHERE tt.transactionID = ${transactionID} AND tt.tagID = ${tagID};
         `;
 
         db.pool.query(query2, function (error, rows) {
             if (error) {
-                console.error('Error fetching updated transaction tags:', error);
-                return res.status(400).json({ error: "Error fetching updated transaction tags" });
+                console.error('Error fetching updated transaction tag:', error);
+                return res.status(400).json({ error: "Error fetching updated transaction tag" });
             }
-            console.log('Rows:', rows)
-            res.json(rows);
-        })
-    })
-})
+
+            console.log('Newly added tag record:', rows);
+            res.json(rows); // Send back the newly added record
+        });
+    });
+});
+
 
 // DELETE /transactionTags/delete
 router.delete('/delete', function (req, res) {
+    console.log('DELETE request receive:', req.body)
     let transactionID = req.body.transactionID;
-    console.log('delete route: ', transactionID)
+    let tagID = req.body.tagID;
+    console.log('delete route trans ID & tag ID: ', transactionID, tagID)
 
     // Check if transactionID is valid
     if (!transactionID) {
@@ -127,7 +134,7 @@ router.delete('/delete', function (req, res) {
 
     const deleteQuery = `
         DELETE FROM TransactionTags 
-        WHERE transactionID = ${transactionID};
+        WHERE transactionID = ${transactionID} AND tagID = ${tagID};
     `;
 
     db.pool.query(deleteQuery, function (error, results) {
