@@ -8,8 +8,6 @@ console.log("delete_transactionTags.js loaded");
 
 // Select all delete buttons
 let deleteTransactionTagsButtons = document.querySelectorAll('.delete-btn');
-console.log("Delete buttons found:", deleteTransactionTagsButtons.length);
-
 
 // event listeners to each button
 deleteTransactionTagsButtons.forEach(button => {

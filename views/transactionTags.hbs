@@ -4,8 +4,19 @@ Date: 11/20/2024
 Adapted: all code adapted from starter app
 From: cs340-nodejs-starter-app
 */}}
-<h1>View, Delete and Update Tags for Transactions</h1>
+<h1>View, Update and Delete Tags for Transactions</h1>
+<!-- Dropdown for Filtering -->
+<form id="filter-form">
+    <label for="transactionFilter">Filter by Transaction:</label>
+    <select id="transactionFilter" name="transactionID">
+        <option value="">All Transactions</option>
+        {{#each transactions}}
+        <option value="{{this.id}}">{{this.description}}</option>
+        {{/each}}
+    </select>
+</form>
 
+<!-- Data table -->
 <table id="transactiontags">
     <thead>
         <tr>
@@ -13,12 +24,12 @@ From: cs340-nodejs-starter-app
             <th>Transaction Description</th>
             <th>Tag</th>
             <th>Delete</th>
-            <th>Delete</th>
+            <th>Update</th>
         </tr>
     </thead>
     <tbody>
         {{#each data}}
-        <tr data-value="{{this.transactionID}}">
+        <tr>
             <td>{{this.transactionID}}</td>
             <td>{{this.description}}</td>
             <td>{{this.tagName}}</td>
@@ -27,14 +38,15 @@ From: cs340-nodejs-starter-app
                     Delete
                 </button>
             </td>
-            <td><button class="update-btn" data-id="{{this.transactionID}}">Update</button></td>
+            <td>
+                <button class="update-btn" data-id="{{this.transactionID}}">Update</button>
+            </td>
         </tr>
         {{/each}}
     </tbody>
 </table>
 
-<h2>Adding Tags to an existing Transaction</h2>
-<p>To add a new tags for an existing transaction, please select a transaction</p>
+<h2>Add a New Tag to an Existing Transaction</h2>
 <form id="add-new-transactiontag">
     <label for="transactionID">Transaction:</label>
     <select name="transactionID" id="transactionID">
@@ -55,5 +67,31 @@ From: cs340-nodejs-starter-app
     <button type="submit">Add</button>
 </form>
 
+{{!-- update form , update a tag for an existing record of this TransactionTags intersection table --}}
+<h2>Updating Tags to an existing Transaction</h2>
+<p>To update new tags for an existing transaction, please select a transaction</p>
+<form id="update-new-transactiontag">
+    <label for="transactionID">Transaction:</label>
+    <select name="transactionID" id="update-transactionID">
+        <option value="">Select a Transaction</option>
+        {{#each transactions}}
+        <option value="{{this.id}}">{{this.description}}</option>
+        {{/each}}
+    </select>
+
+    <label for="tagID">Tag:</label>
+    <select name="tagID" id="update-tagID">
+        <option value="">Select a Tag</option>
+        {{#each tags}}
+        <option value="{{this.id}}">{{this.tagName}}</option>
+        {{/each}}
+    </select>
+
+    <button type="submit">Update</button>
+</form>
+
+
 <script src="/js/add_transactionTags.js"></script>
 <script src="/js/delete_transactionTags.js"></script>
+<script src="/js/update_transactionTags.js"></script>
+<script src="/js/select_transactionTags.js"></script>

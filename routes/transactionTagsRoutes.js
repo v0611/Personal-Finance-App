@@ -61,6 +61,49 @@ router.get('/', function (req, res) {
     });
 });
 
+// GET: Filter transaction tags by transactionID
+router.get('/filter', function (req, res) {
+    const { transactionID } = req.query;
+
+    let filterQuery;
+
+    // if there a transaction ID then query only records with that ID
+    if (transactionID) {
+        filterQuery = `
+            SELECT 
+                t.transactionID,
+                t.description,
+                tg.tagID,
+                tg.tagName
+            FROM TransactionTags tt
+            JOIN Transactions t ON tt.transactionID = t.transactionID
+            JOIN Tags tg ON tt.tagID = tg.tagID
+            WHERE t.transactionID = ${transactionID};
+        `;
+    } else { // no transaction ID then querying all records
+        filterQuery = `
+            SELECT 
+                t.transactionID,
+                t.description,
+                tg.tagID,
+                tg.tagName
+            FROM TransactionTags tt
+            JOIN Transactions t ON tt.transactionID = t.transactionID
+            JOIN Tags tg ON tt.tagID = tg.tagID;
+        `;
+    }
+
+    db.pool.query(filterQuery, function (error, rows) {
+        if (error) {
+            console.error('Error fetching filtered transaction tags:', error);
+            return res.status(500).send("Error filtering transaction tags.");
+        }
+
+        res.json(rows);
+    });
+});
+
+
 router.post('/add', function (req, res) {
     console.log('CREATE request received:', req.body)
     let data = req.body;
@@ -88,7 +131,12 @@ router.post('/add', function (req, res) {
     db.pool.query(query1, function (error, rows, fields) {
         if (error) {
             console.error('Error inserting transaction tag:', error);
-            return res.sendStatus(400); 
+            return res.sendStatus(400);
+        }
+
+        if (rows.length > 0) {
+            console.log('Duplicate entry found');
+            return res.status(409).json({ message: "Duplicate entry: This transaction and tag combination already exists." });
         }
 
         console.log('Insertion successful');
@@ -113,7 +161,7 @@ router.post('/add', function (req, res) {
             }
 
             console.log('Newly added tag record:', rows);
-            res.json(rows); // Send back the newly added record
+            res.json(rows);
         });
     });
 });
@@ -126,12 +174,6 @@ router.delete('/delete', function (req, res) {
     let tagID = req.body.tagID;
     console.log('delete route trans ID & tag ID: ', transactionID, tagID)
 
-    // Check if transactionID is valid
-    if (!transactionID) {
-        console.error('Transaction ID is missing.');
-        return res.status(400).json({ error: 'Transaction ID is required.' });
-    }
-
     const deleteQuery = `
         DELETE FROM TransactionTags 
         WHERE transactionID = ${transactionID} AND tagID = ${tagID};
@@ -143,15 +185,41 @@ router.delete('/delete', function (req, res) {
             return res.status(500).json({ error: 'Failed to delete transaction tag.' });
         }
 
-        if (results.affectedRows === 0) {
-            console.warn('No matching record with given ID.');
-            return res.status(404).json({ error: 'Transaction tag record not found.' });
-        }
-
         console.log(`Transaction tag with ID ${transactionID} deleted successfully.`);
         res.status(200).json({ message: 'Transaction tag deleted successfully.' });
     });
 });
 
+// UPDATE /transactionTags/update
+router.put('/update', function (req, res) {
+    let transactionID = req.body.transactionID;
+    console.log('update route: ', transactionID)
+
+    // Check if transactionID is valid
+    if (!transactionID) {
+        console.error('Transaction ID is missing.');
+        return res.status(400).json({ error: 'Transaction ID is required.' });
+    }
+
+    const updateQuery = `
+        UPDATE TransactionTags 
+        SET transactionID = ${transactionID}, tagID = ${tagID};
+    `;
+
+    db.pool.query(updateQuery, function (error, results) {
+        if (error) {
+            console.error('Error updating transaction tag:', error);
+            return res.status(500).json({ error: 'Failed to update transaction tag.' });
+        }
+
+        if (results.affectedRows === 0) {
+            console.warn('No matching record with given ID.');
+            return res.status(404).json({ error: 'Transaction tag record not found.' });
+        }
+
+        console.log(`Transaction tag with ID ${transactionID} updated successfully.`);
+        res.status(200).json({ message: 'Transaction tag updated successfully.' });
+    });
+});
 
 module.exports = router;

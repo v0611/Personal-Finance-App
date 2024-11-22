@@ -9,7 +9,7 @@ console.log("add_transactionTags.js loaded");
 let addTransactionTagsForm = document.getElementById('add-new-transactiontag');
 
 addTransactionTagsForm.addEventListener("submit", function (e) {
-    e.preventDefault();
+    e.preventDefault(); // Prevent page reload
 
     let inputTransaction = document.getElementById("transactionID");
     let inputTag = document.getElementById("tagID");
@@ -80,50 +80,11 @@ function addNewTagRow(data) {
 
         // Append the new row to the table body
         tableBody.appendChild(newRow);
-
-        // Reattach delete event listeners for the newly added row
+        // Attach a delete event listener to the newly added delete button
         // without, cant delete the newly created record without reloading page
-        attachDeleteListeners(); 
+        const deleteButton = newRow.querySelector(".delete-btn");
+        deleteButton.addEventListener("click", handleDelete);
     });
 }
 
-// Function to attach delete event listeners
-function attachDeleteListeners() {
-    let deleteButtons = document.querySelectorAll('.delete-btn');
 
-    deleteButtons.forEach(button => {
-        // Remove previous event listener if it exists to prevent duplicate handlers
-        button.removeEventListener("click", handleDelete);
-        button.addEventListener("click", handleDelete);
-    });
-}
-
-// Delete button event handler
-function handleDelete(e) {
-    e.preventDefault();
-
-    let transactionID = e.target.dataset.transactionId;
-    let tagID = e.target.dataset.tagId;
-
-    console.log(`Attempting to delete: TransID ${transactionID}, TagID ${tagID}`);
-
-    fetch('/transactiontags/delete', {
-        method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ transactionID, tagID }),
-    })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Failed to delete transaction tag');
-            }
-            return response.json();
-        })
-        .then(() => {
-            console.log(`Transaction ID ${transactionID} and Tag ID ${tagID} deleted successfully.`);
-            e.target.closest("tr").remove();
-        })
-        .catch(error => console.error('Error:', error));
-}
-
-// Initial setup: attach delete listeners when the page loads
-attachDeleteListeners();
