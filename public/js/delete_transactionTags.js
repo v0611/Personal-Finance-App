@@ -1,16 +1,16 @@
 /* Code citation
 Date: 11/20/2024
 Adapted: Event Listener setup from startercode
-From: cs340-nodejs-starter-app, MDN web docs on textcontext
+From: cs340-nodejs-starter-app, Dynamically Updating Data
 */
 
 console.log("delete_transactionTags.js loaded");
 
 // Select all delete buttons
-let deleteTransactionTagsButtons = document.querySelectorAll('.delete-btn');
+let updateTransactionTagsButtons = document.querySelectorAll('.update-btn');
 
 // event listeners to each button
-deleteTransactionTagsButtons.forEach(button => {
+updateTransactionTagsButtons.forEach(button => {
     button.addEventListener("click", function (e) {
         e.preventDefault(); // Prevent default form or button behavior
 
