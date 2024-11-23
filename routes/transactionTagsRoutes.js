@@ -56,6 +56,7 @@ router.get('/', function (req, res) {
                     transactions: transactionRows, // Data for transaction dropdown
                     tags: tagRows, // Data for tag dropdown
                 });
+                console.log(transactionTagsRows)
             });
         });
     });
@@ -193,7 +194,10 @@ router.delete('/delete', function (req, res) {
 // UPDATE /transactionTags/update
 router.put('/update', function (req, res) {
     let transactionID = req.body.transactionID;
-    console.log('update route: ', transactionID)
+    console.log(req.body);
+    let tagID = req.body.tagID;
+    let oldTagID = req.body.oldTagID;
+    console.log('update route: ', transactionID);
 
     // Check if transactionID is valid
     if (!transactionID) {
@@ -203,7 +207,8 @@ router.put('/update', function (req, res) {
 
     const updateQuery = `
         UPDATE TransactionTags 
-        SET transactionID = ${transactionID}, tagID = ${tagID};
+        SET tagID = ${tagID}
+        WHERE transactionID = ${transactionID} and tagID = ${oldTagID};
     `;
 
     db.pool.query(updateQuery, function (error, results) {

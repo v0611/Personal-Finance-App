@@ -7,10 +7,10 @@ From: cs340-nodejs-starter-app, Dynamically Updating Data
 console.log("delete_transactionTags.js loaded");
 
 // Select all delete buttons
-let updateTransactionTagsButtons = document.querySelectorAll('.update-btn');
+let deleteTransactionTagsButtons = document.querySelectorAll('.delete-btn');
 
 // event listeners to each button
-updateTransactionTagsButtons.forEach(button => {
+deleteTransactionTagsButtons.forEach(button => {
     button.addEventListener("click", function (e) {
         e.preventDefault(); // Prevent default form or button behavior
 
