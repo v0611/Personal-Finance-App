@@ -13,6 +13,8 @@ PORT = 9234;                 // Set a port number at the top so it's easy to cha
 var db = require('./database/db-connector');
 const transactionTagsRoutes = require('./routes/transactionTagsRoutes');
 const transactionsRoutes = require('./routes/transactionsRoutes');
+const userRoutes = require('./routes/usersRoutes');
+
 app.use(express.urlencoded({ extended: true })); // Parse URL-encoded form data
 
 
@@ -48,6 +50,7 @@ app.get('/', function (req, res) {
 
 app.use('/transactiontags', transactionTagsRoutes);
 app.use('/transactions', transactionsRoutes);
+app.use('/users', transactionsRoutes);
 
 
 /*
