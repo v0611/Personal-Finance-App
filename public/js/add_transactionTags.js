@@ -73,6 +73,7 @@ function addNewTagRow(data) {
                     Delete
                 </button>
             </td>
+            
             <td>
                 <button class="update-btn" data-id="${row.transactionID}">Update</button>
             </td>

@@ -222,4 +222,40 @@ router.put('/update', function (req, res) {
     });
 });
 
+// UPDATE /transactionTags/update
+router.put('/update', function (req, res) {
+    let transactionID = req.body.transactionID;
+    console.log(req.body);
+    let tagID = req.body.tagID;
+    let oldTagID = req.body.oldTagID;
+    console.log('update route: ', transactionID);
+
+    // Check if transactionID is valid
+    if (!transactionID) {
+        console.error('Transaction ID is missing.');
+        return res.status(400).json({ error: 'Transaction ID is required.' });
+    }
+
+    const updateQuery = `
+        UPDATE TransactionTags 
+        SET tagID = ${tagID}
+        WHERE transactionID = ${transactionID} and tagID = ${oldTagID};
+    `;
+
+    db.pool.query(updateQuery, function (error, results) {
+        if (error) {
+            console.error('Error updating transaction tag:', error);
+            return res.status(500).json({ error: 'Failed to update transaction tag.' });
+        }
+
+        if (results.affectedRows === 0) {
+            console.warn('No matching record with given ID.');
+            return res.status(404).json({ error: 'Transaction tag record not found.' });
+        }
+
+        console.log(`Transaction tag with ID ${transactionID} updated successfully.`);
+        res.status(200).json({ message: 'Transaction tag updated successfully.' });
+    });
+});
+
 module.exports = router;
