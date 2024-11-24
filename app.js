@@ -12,6 +12,9 @@ PORT = 9234;                 // Set a port number at the top so it's easy to cha
 // Database
 var db = require('./database/db-connector');
 const transactionTagsRoutes = require('./routes/transactionTagsRoutes');
+const transactionsRoutes = require('./routes/transactionsRoutes');
+app.use(express.urlencoded({ extended: true })); // Parse URL-encoded form data
+
 
 
 // Test Database Connection
@@ -41,37 +44,11 @@ app.use(express.static('public'))
 // GET route
 app.get('/', function (req, res) {
     res.redirect('/transactiontags')
-    // let query1 = `
-    //     SELECT 
-    //         Transactions.transactionID, 
-    //         Users.userName, 
-    //         Categories.categoryName, 
-    //         Categories.categoryType,
-    //         Transactions.amount, 
-    //         DATE_FORMAT(Transactions.date, '%m/%d/%Y') AS formatted_date, 
-    //         Transactions.description,
-    //         GROUP_CONCAT(Tags.tagName) AS tags
-    //     FROM Transactions
-    //     JOIN Users ON Transactions.userID = Users.userID
-    //     LEFT JOIN Categories ON Transactions.categoryID = Categories.categoryID
-    //     LEFT JOIN TransactionTags ON Transactions.transactionID = TransactionTags.transactionID
-    //     LEFT JOIN Tags ON TransactionTags.tagID = Tags.tagID
-    //     GROUP BY Transactions.transactionID;
-    // `;
-
-    // // Execute the query
-    // db.pool.query(query1, function (error, rows, fields) {
-    //     if (error) {
-    //         console.error("Error executing query: ", error);
-    //         return res.status(500).send("Error retrieving transactions.");
-    //     }
-
-    //     // Send the result to render in handlebard file 
-    //     return res.render('index', { data: rows });
-    // });
 });
 
 app.use('/transactiontags', transactionTagsRoutes);
+app.use('/transactions', transactionsRoutes);
+
 
 /*
     LISTENER

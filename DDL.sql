@@ -12,7 +12,7 @@ CREATE TABLE Users (
 
 -- Sample Data for Users
 INSERT INTO Users (userName, userEmail, password) VALUES
-('Sabrina', 'sabrina@example.com', 'password789'),
+('Sabrena', 'sabrina@example.com', 'password789'),
 ('TateMcRae', 'Tate@example.com', 'passwordabc'),
 ('MeganTS', 'MeganTS@example.com', 'passwordxyz');
 
@@ -48,14 +48,11 @@ CREATE TABLE Transactions (
 -- Sample Data for Transactions categorized as either income or expense
 INSERT INTO Transactions (userID, categoryID, amount, date, description) VALUES
 (1, 3, 25.00, '2024-06-10', 'Uber back to hotel Miami June 2024'),              -- Transportation (Expense)
-(1, 4, 60.00, '2024-06-14', 'Dinner at Hotel Miami June 2024'),             	-- Food (Expense)
 (1, 4, 45.00, '2024-07-10', 'Lyft to client site'),             				-- Transportation (Expense)
 (1,	1, 25000.00,'2024-06-15', 'Monthly salary from main job'),					-- Salary (income)
 (1,	2, 450.00, '2024-06-18', 'Consulting work for ABC Co'),						-- Freelance (income)
 
-(2,4, 76.00, '2024-07-10', 'Groceries for dinnner date'),						-- Food (Expense)
-(2,4, 23.00, '2024-07-15', 'Groceries at Target'),								-- Food (Expense)
-(2,5, 10.00, '2024-07-15',	'Shampoo at Target')								-- Health & Beauty (Expense)
+(2,4, 76.00, '2024-07-10', 'Groceries for dinnner')								-- Food (Expense)
 
 ;
 -- Create Tags table
@@ -67,10 +64,10 @@ CREATE TABLE Tags (
 -- Sample Data for Tags
 INSERT INTO Tags (tagName) VALUES
 ('Rideshare'), ('Uber'), ('Lyft'),
-('Dining Out'), ('Groceries'), ('Whole Foods'),
-('Target'), ('Salary'), 
-('Upwork'), ('Consulting'), ('Contractor'),
-('Recurring'), ('One-Time'), ('Vacation'), ('Work-related'), ('Miami');
+('Dining Out'), ('Groceries'), ('Whole Foods'), ('Target'),
+('Salary'), 
+('Upwork'), ('Consulting'), ('Work-related'),
+('Recurring'), ('One Off'), ('Vacation');
 
 -- Create TransactionTags table.
 CREATE TABLE TransactionTags (
@@ -86,14 +83,10 @@ CREATE TABLE TransactionTags (
 -- Transportation Expenses (Uber/Lyft, Vacation, Work-related)
 INSERT INTO TransactionTags (transactionID, tagID) VALUES
 (1, 1), (1, 2), (1, 15),        -- Transaction #1: Rideshare, Uber, Vacation
-(2,15), (2,4),					-- Transaction #2: Dinner, Dinning out
-(3,16),(3,1),					-- Transaction #3: Work-related
-(4,12),							-- Transaction #4: Salary job  monthly income
-(5,9),(5, 10),					-- Transaction #5: Freelance consulting job with ABC Co
-
-(6, 5), (6, 6),					-- Transaction #6: Groceries at Whole Foods for dinner
-(7, 5), (7,7),					-- Transaction #7: Groceries at Target
-(8,7)							-- Transaction #8: Shampoo at Target
+(2,11), (2,3),					-- Transaction #2: Work related, Lyft
+(3,8),							-- Transaction #3: Work-related
+(4,9),
+(5,4), (5,5)					-- Transaction #4: Groceries for dinner
 ;
 
 SET FOREIGN_KEY_CHECKS = 1;

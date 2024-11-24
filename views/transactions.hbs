@@ -1,0 +1,84 @@
+<h1>All Transactions</h1>
+<table id="transactions-table">
+    <thead>
+        <tr>
+            <th>Transaction ID</th>
+            <th>User Name</th>
+            <th>Category Name</th>
+            <th>Category Type</th>
+            <th>Amount</th>
+            <th>Date</th>
+            <th>Description</th>
+            <th>Tags</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each data}}
+        <tr data-value="{{this.transactionID}}">
+            <td>{{this.transactionID}}</td>
+            <td>{{this.userName}}</td>
+            <td>{{this.categoryName}}</td>
+            <td>{{this.categoryType}}</td>
+            <td>{{this.amount}}</td>
+            <td>{{this.formatted_date}}</td>
+            <td>{{this.description}}</td>
+            <td>{{this.tags}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+
+
+<br>
+{{!-- Form to add a record to the table --}}
+<h2>Add a Transaction</h2>
+<p>Required fields are marked with an asterisk </p>
+<form id="add-transaction-form" method="POST" action="/transactions/add">
+    <!-- Dropdown for Users -->
+    <select name="userID" id="user-name" required>
+        <option value="">* Select a User</option>
+        {{#each users}}
+        <option value="{{this.id}}">{{this.userName}}</option>
+        {{/each}}
+    </select>
+
+
+    <!-- Dropdown for Categories -->
+    <label for="category">*Category:</label>
+    <select name="categoryID" id="category" required>
+        <option value="">Select a Category</option>
+        {{#each categories}}
+        <option value="{{this.id}}">{{this.categoryName}}</option>
+        {{/each}}
+    </select>
+
+
+    <!-- Input for Dollar Amount -->
+    <label for="amount">*Amount ($):</label>
+    <input type="number" name="amount" id="amount" step="0.01" placeholder="Enter amount" required>
+
+    <!-- Input for Description -->
+    <label for="description">Description:</label>
+    <input type="text" name="description" id="description" placeholder="Enter description">
+
+    <!-- Input for Transaction Date -->
+    <label for="date">*Date:</label>
+    <input type="date" name="date" id="date" required>
+
+    <br>
+    <!-- Checkboxes for Tags -->
+    <label for="tags">Tags:</label>
+    <div id="tags">
+        {{#each tags}}
+        <div>
+            <input type="checkbox" name="tags" id="tag-{{this.id}}" value="{{this.id}}">
+            <label for="tag-{{this.id}}">{{this.tagName}}</label>
+        </div>
+        {{/each}}
+    </div>
+
+
+    <button type="submit">Add Transaction</button>
+</form>
+
+<script src="/js/add_transactions.js"></script>
