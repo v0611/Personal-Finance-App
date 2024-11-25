@@ -50,11 +50,11 @@ addUsersForm.addEventListener("submit", function (e) {
             }
             return response.json();
         })
-        .then(newRow => {
-            console.log('Server response:', newRow);
+        .then(newUser => {
+            console.log('Server response:', newUser);
 
-            // add the newly created record to the table 
-            addNewUserRow(newRow);
+            
+            addNewUserRow(newUser[0]);  // add the newly created record to the table 
 
             // clear form 
             inputUserName.value = '';
@@ -68,19 +68,17 @@ addUsersForm.addEventListener("submit", function (e) {
 function addNewUserRow(data) {
     let tableBody = document.querySelector("#users tbody");
 
-    data.forEach(row => {
-        let newRow = document.createElement("tr");
-        newRow.setAttribute("data-value", row.userID);
+    
+    const newRow = document.createElement("tr");
+    newRow.innerHTML = `
+        <td>${data.userID}</td>
+        <td>${data.userName}</td>
+        <td>${data.userEmail}</td>
+        <td>${data.password}</td>
+    `;
 
-        newRow.innerHTML = `
-            <td>${row.userID}</td>
-            <td>${row.userName}</td>
-            <td>${row.userEmail}</td>
-            <td>${row.userPassword}</td>
-        `;
+    // Append the new row to the table body
+    tableBody.appendChild(newRow);
+};
 
-        // Append the new row to the table body
-        tableBody.appendChild(newRow);
-    });
-}
 
