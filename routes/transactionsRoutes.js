@@ -70,6 +70,61 @@ router.get('/', function(req, res) {
     });
 });
 
+router.get('/filter', function (req, res) {
+    const { userID } = req.query;
+
+    let filterQuery;
+
+    if (userID) {
+        filterQuery = `
+            SELECT 
+                t.transactionID,
+                u.userName,
+                c.categoryName,
+                c.categoryType,
+                t.amount,
+                DATE_FORMAT(t.date, '%m/%d/%Y') AS formatted_date,
+                t.description,
+                GROUP_CONCAT(tags.tagName) AS tags
+            FROM Transactions t
+            JOIN Users u ON t.userID = u.userID
+            LEFT JOIN Categories c ON t.categoryID = c.categoryID
+            LEFT JOIN TransactionTags tt ON t.transactionID = tt.transactionID
+            LEFT JOIN Tags tags ON tt.tagID = tags.tagID
+            WHERE u.userID = ${userID}
+            GROUP BY t.transactionID;
+        `;
+    } else {
+        filterQuery = `
+            SELECT 
+                t.transactionID,
+                u.userName,
+                c.categoryName,
+                c.categoryType,
+                t.amount,
+                DATE_FORMAT(t.date, '%m/%d/%Y') AS formatted_date,
+                t.description,
+                GROUP_CONCAT(tags.tagName) AS tags
+            FROM Transactions t
+            JOIN Users u ON t.userID = u.userID
+            LEFT JOIN Categories c ON t.categoryID = c.categoryID
+            LEFT JOIN TransactionTags tt ON t.transactionID = tt.transactionID
+            LEFT JOIN Tags tags ON tt.tagID = tags.tagID
+            GROUP BY t.transactionID;
+        `;
+    }
+
+    db.pool.query(filterQuery, function (error, rows) {
+        if (error) {
+            console.error('Error fetching filtered transactions:', error);
+            return res.status(500).send("Error filtering transactions.");
+        }
+
+        res.json(rows);
+    });
+});
+
+
 router.post('/add', function (req, res) {
     console.log('CREATE request received:', req.body);
 
@@ -118,23 +173,23 @@ router.post('/add', function (req, res) {
 // Fetch a transaction with tags
 function fetchTransactionWithTags(transactionID, res) {
     const query = `
-        SELECT 
-            Transactions.transactionID, 
-            Users.userName, 
-            Categories.categoryName, 
-            Categories.categoryType, -- Fetch category type
-            Transactions.amount, 
-            DATE_FORMAT(Transactions.date, '%m/%d/%Y') AS formatted_date, -- Format date
-            Transactions.description, 
-            GROUP_CONCAT(Tags.tagName) AS tags
-        FROM Transactions
-        JOIN Users ON Transactions.userID = Users.userID
-        JOIN Categories ON Transactions.categoryID = Categories.categoryID
-        LEFT JOIN TransactionTags ON Transactions.transactionID = TransactionTags.transactionID
-        LEFT JOIN Tags ON TransactionTags.tagID = Tags.tagID
-        WHERE Transactions.transactionID = ${transactionID}
-        GROUP BY Transactions.transactionID;
-    `;
+    SELECT 
+        Transactions.transactionID, 
+        Users.userName, 
+        Categories.categoryName, 
+        Categories.categoryType, 
+        Transactions.amount, 
+        DATE_FORMAT(Transactions.date, '%m/%d/%Y') AS formatted_date, 
+        Transactions.description, 
+        GROUP_CONCAT(Tags.tagName) AS tags
+    FROM Transactions
+    JOIN Users ON Transactions.userID = Users.userID
+    JOIN Categories ON Transactions.categoryID = Categories.categoryID
+    LEFT JOIN TransactionTags ON Transactions.transactionID = TransactionTags.transactionID
+    LEFT JOIN Tags ON TransactionTags.tagID = Tags.tagID
+    WHERE Transactions.transactionID = ${transactionID}
+    GROUP BY Transactions.transactionID;
+`;
 
     db.pool.query(query, function (error, rows) {
         if (error) {
@@ -152,7 +207,5 @@ function fetchTransactionWithTags(transactionID, res) {
         res.status(200).json(transaction); // Send the transaction back as JSON
     });
 }
-
-
 
 module.exports = router;

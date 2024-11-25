@@ -50,7 +50,7 @@ app.get('/', function (req, res) {
 
 app.use('/transactiontags', transactionTagsRoutes);
 app.use('/transactions', transactionsRoutes);
-app.use('/users', transactionsRoutes);
+app.use('/users', userRoutes);
 
 
 /*

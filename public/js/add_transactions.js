@@ -6,11 +6,8 @@ From: cs340-nodejs-starter-app, MDN web docs on textcontext
 
 console.log("add_transaction.js loaded");
 
-const addTransactionForm = document.getElementById("add-transaction-form");
-
-// Add event listener to handle form submission
-addTransactionForm.addEventListener("submit", function (e) {
-    e.preventDefault(); 
+document.getElementById("add-transaction-form").addEventListener("submit", function (e) {
+    e.preventDefault(); // Prevent default form submission
 
     // Get form values
     const userID = document.getElementById("user-name").value;
@@ -18,8 +15,9 @@ addTransactionForm.addEventListener("submit", function (e) {
     const amount = document.getElementById("amount").value;
     const description = document.getElementById("description").value;
     const date = document.getElementById("date").value;
-    const tags = Array.from(document.getElementById("tags").selectedOptions).map(option => option.value);
 
+    // Collect selected tags
+    const tags = Array.from(document.querySelectorAll('input[name="tags"]:checked')).map(checkbox => checkbox.value);
 
     // Prepare data to send
     const data = {
@@ -31,9 +29,7 @@ addTransactionForm.addEventListener("submit", function (e) {
         tags: tags.map(tag => parseInt(tag))
     };
 
-    console.log("Data being sent:", data);
-
-    // Send data to the server
+    // Send data to the backend
     fetch("/transactions/add", {
         method: "POST",
         headers: {
@@ -43,31 +39,25 @@ addTransactionForm.addEventListener("submit", function (e) {
     })
         .then(response => {
             if (!response.ok) {
-                throw new Error(`Server error: ${response.status} ${response.statusText}`);
+                throw new Error(`Server error: ${response.statusText}`);
             }
             return response.json();
         })
         .then(newTransaction => {
-            console.log("Server response:", newTransaction);
-
-            // Add the new transaction to the table dynamically
-            addNewTransactionRow(newTransaction);
-
-            // Clear the form
-            addTransactionForm.reset();
+            // Log the new transaction and update the table dynamically
+            console.log("Transaction added:", newTransaction);
+            addNewTransactionRow(newTransaction); // Update the table
+            this.reset(); // Clear the form
         })
         .catch(error => {
             console.error("Error adding transaction:", error);
-            alert("Failed to add transaction. Please check your inputs and try again.");
+            alert("Failed to add the transaction. Please try again.");
         });
 });
 
-// Function to add a new transaction row to the table dynamically
+
 function addNewTransactionRow(transaction) {
     const tableBody = document.querySelector("#transactions-table tbody");
-
-    // Reformat date to mm/dd/yyyy
-    const formattedDate = transaction.formatted_date || formatDate(transaction.date);
 
     const newRow = document.createElement("tr");
     newRow.innerHTML = `
@@ -75,8 +65,8 @@ function addNewTransactionRow(transaction) {
         <td>${transaction.userName}</td>
         <td>${transaction.categoryName}</td>
         <td>${transaction.categoryType}</td>
-        <td>${transaction.amount}</td>
-        <td>${formattedDate}</td>
+        <td>${transaction.amount.toFixed(2)}</td>
+        <td>${transaction.formatted_date}</td>
         <td>${transaction.description}</td>
         <td>${transaction.tags && Array.isArray(transaction.tags) ? transaction.tags.join(", ") : ""}</td>
     `;
@@ -84,15 +74,5 @@ function addNewTransactionRow(transaction) {
     tableBody.appendChild(newRow);
 }
 
-// Function to format date to mm/dd/yyyy
-function formatDate(dateString) {
-    if (!dateString) return "";
 
-    const date = new Date(dateString);
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
-    const year = date.getFullYear();
-
-    return `${month}/${day}/${year}`;
-}
 

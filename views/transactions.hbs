@@ -1,3 +1,20 @@
+{{!
+/* Code citation
+Date: 11/20/2024
+Adapted: all code adapted from starter app except for filter form
+From: cs340-nodejs-starter-app
+*/}}
+
+<form id="filter-form">
+    <label for="transactionFilter">Filter Transactions by User:</label>
+    <select id="transactionFilter" name="userID">
+        <option value="">All Transactions</option>
+        {{#each users}}
+        <option value="{{this.id}}">{{this.userName}}</option>
+        {{/each}}
+    </select>
+</form>
+
 <h1>All Transactions</h1>
 <table id="transactions-table">
     <thead>
@@ -82,3 +99,4 @@
 </form>
 
 <script src="/js/add_transactions.js"></script>
+<script src="/js/select_transactions.js"></script>

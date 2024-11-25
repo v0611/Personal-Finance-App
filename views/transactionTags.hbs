@@ -1,7 +1,7 @@
 {{!
 /* Code citation
 Date: 11/20/2024
-Adapted: all code adapted from starter app
+Adapted: all code adapted from starter app except for filter form
 From: cs340-nodejs-starter-app
 */}}
 <h1>View, Update and Delete Tags for Transactions</h1>
@@ -24,7 +24,7 @@ From: cs340-nodejs-starter-app
             <th>Transaction Description</th>
             <th>Tag</th>
             <th>Delete</th>
-            <th>Update</th>
+            <th>Update Tag</th>
         </tr>
     </thead>
     <tbody>
@@ -39,7 +39,13 @@ From: cs340-nodejs-starter-app
                 </button>
             </td>
             <td>
-                <button class="update-btn" data-id="{{this.transactionID}}">Update</button>
+                <select>
+                    <option value="">Select a Tag</option>
+                    {{#each ../tags}}
+                    <option value="{{this.id}}">{{this.tagName}}</option>
+                    {{/each}}
+                </select>
+                <button class="update-btn" data-id="{{this.transactionID}}" data-tag-id="{{this.tagID}}">Update</button>
             </td>
         </tr>
         {{/each}}
@@ -49,7 +55,7 @@ From: cs340-nodejs-starter-app
 <h2>Add a New Tag to an Existing Transaction</h2>
 <form id="add-new-transactiontag">
     <label for="transactionID">Transaction:</label>
-    <select name="transactionID" id="transactionID">
+    <select name="transactionID" id="transactionID" required>
         <option value="">Select a Transaction</option>
         {{#each transactions}}
         <option value="{{this.id}}">{{this.description}}</option>
@@ -57,7 +63,7 @@ From: cs340-nodejs-starter-app
     </select>
 
     <label for="tagID">Tag:</label>
-    <select name="tagID" id="tagID">
+    <select name="tagID" id="tagID" required>
         <option value="">Select a Tag</option>
         {{#each tags}}
         <option value="{{this.id}}">{{this.tagName}}</option>
@@ -65,29 +71,6 @@ From: cs340-nodejs-starter-app
     </select>
 
     <button type="submit">Add</button>
-</form>
-
-{{!-- update form , update a tag for an existing record of this TransactionTags intersection table --}}
-<h2>Updating Tags to an existing Transaction</h2>
-<p>To update new tags for an existing transaction, please select a transaction</p>
-<form id="update-new-transactiontag">
-    <label for="transactionID">Transaction:</label>
-    <select name="transactionID" id="update-transactionID">
-        <option value="">Select a Transaction</option>
-        {{#each transactions}}
-        <option value="{{this.id}}">{{this.description}}</option>
-        {{/each}}
-    </select>
-
-    <label for="tagID">Tag:</label>
-    <select name="tagID" id="update-tagID">
-        <option value="">Select a Tag</option>
-        {{#each tags}}
-        <option value="{{this.id}}">{{this.tagName}}</option>
-        {{/each}}
-    </select>
-
-    <button type="submit">Update</button>
 </form>
 
 

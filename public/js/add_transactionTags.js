@@ -1,11 +1,29 @@
 /* Code citation
 Date: 11/20/2024
-Adapted: Event Listener setup from startercode, createElement(), appendChild() from MDN
+Adapted: Event Listener setup from startercode
 From: cs340-nodejs-starter-app, MDN web docs on textcontext
 */
 
 console.log("add_transactionTags.js loaded");
 
+// Initialize an empty tagsList (populate drop down dynamically for newly added record)
+let tagsList = [];
+
+// Fetch tags from the backend
+fetch('/transactiontags/tags')
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Failed to fetch tags.');
+        }
+        return response.json();
+    })
+    .then(tags => {
+        tagsList = tags.map(tag => ({ id: tag.id, tagName: tag.tagName }));
+        console.log('Fetched tags:', tagsList);
+    })
+    .catch(error => console.error('Error fetching tags:', error));
+
+// Get the form element
 let addTransactionTagsForm = document.getElementById('add-new-transactiontag');
 
 addTransactionTagsForm.addEventListener("submit", function (e) {
@@ -13,17 +31,6 @@ addTransactionTagsForm.addEventListener("submit", function (e) {
 
     let inputTransaction = document.getElementById("transactionID");
     let inputTag = document.getElementById("tagID");
-
-    // NULL check
-    if (!inputTransaction.value) {
-        alert("Please select a transaction.");
-        return;
-    }
-
-    if (!inputTag.value) {
-        alert("Please select a tag.");
-        return;
-    }
 
     let data = {
         transactionID: inputTransaction.value,
@@ -43,49 +50,52 @@ addTransactionTagsForm.addEventListener("submit", function (e) {
             }
             return response.json();
         })
-        .then(newRow => {
-            console.log('Server response:', newRow);
+        .then(newRows => {
+            console.log('Server response:', newRows);
 
-            // add the newly created record to the table 
-            addNewTagRow(newRow);
+            // Dynamically add the newly created record to the table
+            newRows.forEach(row => addNewTagRow(row, tagsList));
 
-            // clear form 
+            // Clear form
             inputTransaction.value = '';
             inputTag.value = '';
         })
         .catch(error => console.error('Error:', error));
 });
 
-// Function to add a new row to the table
-function addNewTagRow(data) {
+// Function to dynamically add a new row to the table
+function addNewTagRow(row, tags) {
     let tableBody = document.querySelector("#transactiontags tbody");
 
-    data.forEach(row => {
-        let newRow = document.createElement("tr");
-        newRow.setAttribute("data-value", row.transactionID);
+    let newRow = document.createElement("tr");
+    newRow.setAttribute("data-value", row.transactionID);
 
-        newRow.innerHTML = `
-            <td>${row.transactionID}</td>
-            <td>${row.description}</td>
-            <td>${row.tagName}</td>
-            <td>
-                <button class="delete-btn" data-transaction-id="${row.transactionID}" data-tag-id="${row.tagID}">
-                    Delete
-                </button>
-            </td>
-            
-            <td>
-                <button class="update-btn" data-id="${row.transactionID}">Update</button>
-            </td>
-        `;
+    newRow.innerHTML = `
+        <td>${row.transactionID}</td>
+        <td>${row.description}</td>
+        <td>${row.tagName}</td>
+        <td>
+            <button class="delete-btn" data-transaction-id="${row.transactionID}" data-tag-id="${row.tagID}">
+                Delete
+            </button>
+        </td>
+        <td>
+            <select class="update-dropdown">
+                <option value="" selected>Select a Tag</option>
+                ${tags.map(tag => `<option value="${tag.id}">${tag.tagName}</option>`).join('')}
+            </select>
+            <button class="update-btn" data-id="${row.transactionID}" data-tag-id="${row.tagID}">Update</button>
+        </td>
+    `;
 
-        // Append the new row to the table body
-        tableBody.appendChild(newRow);
-        // Attach a delete event listener to the newly added delete button
-        // without, cant delete the newly created record without reloading page
-        const deleteButton = newRow.querySelector(".delete-btn");
-        deleteButton.addEventListener("click", handleDelete);
-    });
+    // Append the new row to the table body
+    tableBody.appendChild(newRow);
+
+    // Attach a delete event listener to the newly added delete button
+    const deleteButton = newRow.querySelector(".delete-btn");
+    deleteButton.addEventListener("click", handleDelete);
+
+    // Attach an update event listener to the newly added update button
+    const updateButton = newRow.querySelector(".update-btn");
+    updateButton.addEventListener("click", handleUpdate);
 }
-
-
