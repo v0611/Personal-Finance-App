@@ -100,18 +100,21 @@ router.post('/add', function (req, res) {
 
     // NULL check for userName, userEmail and password
     let userName = data.userName;
+    console.log(data.userName);
     if (userName === '') {
       console.error('Error updating users:', error);
       return res.status(500).send("User Name not provided.");
     }
 
     let userEmail = data.userEmail;
+    console.log(data.userEmail);
     if (userEmail == '') {
       console.error('Error updating users:', error);
       return res.status(500).send("Email not provided.");
     }
 
-    let password = data.password;
+    let password = data.userPassword;
+    console.log(data.userPassword);
     if (password == '') {
       console.error('Error updating users:', error);
       return res.status(500).send("Password not provided.");
@@ -124,7 +127,7 @@ router.post('/add', function (req, res) {
     // Insert the new user into the Users table
     let query1 = `
         INSERT INTO Users (userName, userEmail, password) 
-        VALUES (${userName}, ${userEmail}, ${password});
+        VALUES ('${userName}', '${userEmail}', '${password}');
     `;
 
     db.pool.query(query1, function (error, rows, fields) {
