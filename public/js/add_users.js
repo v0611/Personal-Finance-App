@@ -81,10 +81,6 @@ function addNewUserRow(data) {
 
         // Append the new row to the table body
         tableBody.appendChild(newRow);
-        // Attach a delete event listener to the newly added delete button
-        // without, cant delete the newly created record without reloading page
-        // const deleteButton = newRow.querySelector(".delete-btn");
-        // deleteButton.addEventListener("click", handleDelete);
     });
 }
 

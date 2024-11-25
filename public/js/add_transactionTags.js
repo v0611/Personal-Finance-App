@@ -9,7 +9,7 @@ console.log("add_transactionTags.js loaded");
 // Initialize an empty tagsList (populate drop down dynamically for newly added record)
 let tagsList = [];
 
-// Fetch tags from the backend
+// Fetch tags from the backend to populate the tag drop down for new record 
 fetch('/transactiontags/tags')
     .then(response => {
         if (!response.ok) {

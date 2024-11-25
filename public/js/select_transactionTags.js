@@ -10,11 +10,6 @@ console.log("select_transactionTags.js loaded");
 const transactionFilter = document.getElementById("transactionFilter");
 const tableBody = document.querySelector("#transactiontags tbody");
 
-// Extract tags data from the page
-// const tagsList = Array.from(document.querySelectorAll('select[name="tagID"] option')).map(option => ({
-//     id: option.value,
-//     tagName: option.textContent,
-// }));
 
 console.log('Tags list extracted from the page:', tagsList);
 
