@@ -1,7 +1,7 @@
 {{!
 /* Code citation
 Date: 11/20/2024
-Adapted: all code adapted from starter app
+Adapted: all code adapted from starter app except for filter form
 From: cs340-nodejs-starter-app
 */}}
 
@@ -60,7 +60,7 @@ From: cs340-nodejs-starter-app
 <h2>Add a New Tag to an Existing Transaction</h2>
 <form id="add-new-transactiontag">
     <label for="transactionID">Transaction:</label>
-    <select name="transactionID" id="transactionID">
+    <select name="transactionID" id="transactionID" required>
         <option value="">Select a Transaction</option>
         {{#each transactions}}
         <option value="{{this.id}}">{{this.description}}</option>
@@ -68,7 +68,7 @@ From: cs340-nodejs-starter-app
     </select>
 
     <label for="tagID">Tag:</label>
-    <select name="tagID" id="tagID">
+    <select name="tagID" id="tagID" required>
         <option value="">Select a Tag</option>
         {{#each tags}}
         <option value="{{this.id}}">{{this.tagName}}</option>

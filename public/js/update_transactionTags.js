@@ -6,18 +6,20 @@ From: cs340-nodejs-starter-app
 
 console.log("update_transactionTags.js loaded");
 
-// Select all update buttons
-let updateTransactionTagsButtons = document.querySelectorAll('.update-btn');
+// Select the table body (parent element)
+const updateTableBody = document.querySelector("#transactiontags tbody");
 
-// event listeners to each button
-updateTransactionTagsButtons.forEach(button => {
-    button.addEventListener("click", function (e) {
-        e.preventDefault(); // Prevent default form or button behavior
+// Event delegation for update and delete buttons
+updateTableBody.addEventListener("click", (e) => {
+    // Handle update button clicks
+    if (e.target.classList.contains("update-btn")) {
+        e.preventDefault();
 
         let transactionID = e.target.dataset.id;
-        let tagID = e.target.parentElement.parentElement.children[4].children[0].value;
         let oldTagID = e.target.dataset.tagId;
-        console.log(`Data being sent in Update route TransID ${transactionID}, TagID: ${tagID}`)
+        let tagID = e.target.parentElement.parentElement.children[4].children[0].value;
+
+        console.log(`Data being sent in Update route TransID ${transactionID}, TagID: ${tagID}`);
 
         fetch('/transactionTags/update', {
             method: 'PUT',
@@ -37,5 +39,32 @@ updateTransactionTagsButtons.forEach(button => {
                 // e.target.parent.parent.children[2].textContent = ;
             })
             .catch(error => console.error('Error:', error));
-    });
+    }
+
+    // Handle delete button clicks
+    if (e.target.classList.contains("delete-btn")) {
+        e.preventDefault();
+
+        const transactionID = e.target.dataset.transactionId;
+        const tagID = e.target.dataset.tagId;
+
+        console.log(`Deleting transactionID: ${transactionID}, tagID: ${tagID}`);
+
+        fetch('/transactiontags/delete', {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ transactionID, tagID }),
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to delete transaction');
+                }
+                return response.json();
+            })
+            .then(() => {
+                console.log(`Deleted transactionID: ${transactionID}, tagID: ${tagID}`);
+                e.target.closest("tr").remove();
+            })
+            .catch(error => console.error('Error:', error));
+    }
 });

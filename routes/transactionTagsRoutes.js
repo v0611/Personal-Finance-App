@@ -106,43 +106,26 @@ router.get('/filter', function (req, res) {
 
 
 router.post('/add', function (req, res) {
-    console.log('CREATE request received:', req.body)
-    let data = req.body;
+    console.log('CREATE request received:', req.body);
 
-    // NULL check for transactionID and tagID
-    let transactionID = parseInt(data.transactionID);
-    if (isNaN(transactionID)) {
-        transactionID = 'NULL';
-    }
-
-    let tagID = parseInt(data.tagID);
-    if (isNaN(tagID)) {
-        tagID = 'NULL';
-    }
+    let transactionID = parseInt(req.body.transactionID);
+    let tagID = parseInt(req.body.tagID);
 
     console.log('Trans ID:', transactionID);
     console.log('Tag ID:', tagID);
 
-    // Insert the new tag into the TransactionTags table
-    let query1 = `
+    const query1 = `
         INSERT INTO TransactionTags (transactionID, tagID) 
         VALUES (${transactionID}, ${tagID});
     `;
 
-    db.pool.query(query1, function (error, rows, fields) {
+    db.pool.query(query1, function (error) {
         if (error) {
             console.error('Error inserting transaction tag:', error);
-            return res.sendStatus(400);
+            return res.status(400).json({ error: 'Error inserting transaction tag.' });
         }
 
-        if (rows.length > 0) {
-            console.log('Duplicate entry found');
-            return res.status(409).json({ message: "Duplicate entry: This transaction and tag combination already exists." });
-        }
-
-        console.log('Insertion successful');
-
-        // Fetch the newly added transaction tag
+        // query all records to dynamically update the display table 
         const query2 = `
             SELECT 
                 t.transactionID,
@@ -157,15 +140,15 @@ router.post('/add', function (req, res) {
 
         db.pool.query(query2, function (error, rows) {
             if (error) {
-                console.error('Error fetching updated transaction tag:', error);
-                return res.status(400).json({ error: "Error fetching updated transaction tag" });
+                console.error('Error fetching new transaction tag:', error);
+                return res.status(400).json({ error: 'Error fetching new transaction tag.' });
             }
 
-            console.log('Newly added tag record:', rows);
             res.json(rows);
         });
     });
 });
+
 
 
 // DELETE /transactionTags/delete
@@ -193,38 +176,66 @@ router.delete('/delete', function (req, res) {
 
 // UPDATE /transactionTags/update
 router.put('/update', function (req, res) {
-    let transactionID = req.body.transactionID;
-    console.log(req.body);
-    let tagID = req.body.tagID;
-    let oldTagID = req.body.oldTagID;
-    console.log('update route: ', transactionID);
+    const { transactionID, tagID, oldTagID } = req.body;
 
-    // Check if transactionID is valid
-    if (!transactionID) {
-        console.error('Transaction ID is missing.');
-        return res.status(400).json({ error: 'Transaction ID is required.' });
+    if (!transactionID || !tagID || !oldTagID) {
+        return res.status(400).json({ error: 'Transaction ID, new tagID, and old tagID are required.' });
     }
 
     const updateQuery = `
         UPDATE TransactionTags 
         SET tagID = ${tagID}
-        WHERE transactionID = ${transactionID} and tagID = ${oldTagID};
+        WHERE transactionID = ${transactionID} AND tagID = ${oldTagID};
     `;
 
     db.pool.query(updateQuery, function (error, results) {
         if (error) {
-            console.error('Error updating transaction tag:', error);
             return res.status(500).json({ error: 'Failed to update transaction tag.' });
         }
 
         if (results.affectedRows === 0) {
-            console.warn('No matching record with given ID.');
             return res.status(404).json({ error: 'Transaction tag record not found.' });
         }
 
-        console.log(`Transaction tag with ID ${transactionID} updated successfully.`);
-        res.status(200).json({ message: 'Transaction tag updated successfully.' });
+        // Fetch and return the updated record
+        const fetchQuery = `
+            SELECT 
+                t.transactionID,
+                t.description,
+                tg.tagID,
+                tg.tagName
+            FROM TransactionTags tt
+            JOIN Transactions t ON tt.transactionID = t.transactionID
+            JOIN Tags tg ON tt.tagID = tg.tagID
+            WHERE tt.transactionID = ${transactionID} AND tt.tagID = ${tagID};
+        `;
+
+        db.pool.query(fetchQuery, function (fetchError, rows) {
+            if (fetchError) {
+                return res.status(500).json({ error: 'Failed to fetch updated record.' });
+            }
+
+            res.status(200).json(rows[0]); // Return the updated record
+        });
     });
 });
+
+// Fetch all tags
+router.get('/tags', function (req, res) {
+    const query = `
+        SELECT tagID AS id, tagName
+        FROM Tags;
+    `;
+
+    db.pool.query(query, function (error, results) {
+        if (error) {
+            console.error('Error fetching tags:', error);
+            res.status(500).send('Error fetching tags.');
+        } else {
+            res.json(results); // Send the tags as JSON
+        }
+    });
+});
+
 
 module.exports = router;

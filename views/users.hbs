@@ -1,0 +1,60 @@
+{{!
+/* Code citation
+Date: 11/20/2024
+Adapted: all code adapted from starter app
+From: cs340-nodejs-starter-app
+*/}}
+
+<h1>View and Add Users</h1>
+<!-- Dropdown for Filtering -->
+<form id="user-filter-form">
+    <label for="userFilter">Filter by User Name:</label>
+    <select id="userFilter" name="userID">
+        <option value="">Users</option>
+        {{#each users}}
+        <option value="{{this.userID}}">{{this.userName}}</option>
+        {{/each}}
+    </select>
+</form>
+
+<!-- Data table -->
+<table id="users">
+    <thead>
+        <tr>
+            <th>User ID</th>
+            <th>User Name</th>
+            <th>User Email</th>
+            <th>User Password</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each data}}
+        <tr>
+            <td>{{this.userID}}</td>
+            <td>{{this.userName}}</td>
+            <td>{{this.userEmail}}</td>
+            <td>{{this.password}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+
+<h2>Add a New User</h2>
+
+{{!-- input fields for ppl to put in username, email and password --}}
+
+<form id="add-new-users">
+  <label for="fname">User Name:</label>
+  <input type="text" id="user-name" name="user-name"><br><br>
+  <label for="user-email">User Email:</label>
+  <input type="text" id="user-email" name="user-email"><br><br>
+  <label for="password">Password:</label>
+  <input type="text" id="password" name="password"><br><br>
+  <input type="submit" value="Submit">
+</form>
+
+
+
+<script src="/js/add_users.js"></script>
+
+
