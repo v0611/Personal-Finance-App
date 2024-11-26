@@ -11,7 +11,7 @@ From: cs340-nodejs-starter-app
     <label for="userFilter">Filter by User Name:</label>
     <select id="userFilter" name="userID">
         <option value="">Users</option>
-        {{#each users}}
+        {{#each data}}
         <option value="{{this.userID}}">{{this.userName}}</option>
         {{/each}}
     </select>
@@ -56,5 +56,6 @@ From: cs340-nodejs-starter-app
 
 
 <script src="/js/add_users.js"></script>
+<script src="/js/select_users.js"></script>
 
 

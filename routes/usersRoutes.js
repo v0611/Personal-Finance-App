@@ -100,18 +100,21 @@ router.post('/add', function (req, res) {
 
     // NULL check for userName, userEmail and password
     let userName = data.userName;
+    console.log(data.userName);
     if (userName === '') {
       console.error('Error updating users:', error);
       return res.status(500).send("User Name not provided.");
     }
 
     let userEmail = data.userEmail;
+    console.log(data.userEmail);
     if (userEmail == '') {
       console.error('Error updating users:', error);
       return res.status(500).send("Email not provided.");
     }
 
-    let password = data.password;
+    let password = data.userPassword;
+    console.log(data.userPassword);
     if (password == '') {
       console.error('Error updating users:', error);
       return res.status(500).send("Password not provided.");
@@ -124,14 +127,16 @@ router.post('/add', function (req, res) {
     // Insert the new user into the Users table
     let query1 = `
         INSERT INTO Users (userName, userEmail, password) 
-        VALUES (${userName}, ${userEmail}, ${password});
+        VALUES ('${userName}', '${userEmail}', '${password}');
     `;
 
-    db.pool.query(query1, function (error, rows, fields) {
+    db.pool.query(query1, function (error, rows, fields) { // rows refers to the row created from query 1
         if (error) {
             console.error('Error inserting user:', error);
             return res.sendStatus(400);
         }
+        console.log(rows);
+        console.log(fields);
 
         if (rows.length > 0) {
             console.log('Duplicate entry found');
@@ -139,6 +144,8 @@ router.post('/add', function (req, res) {
         }
 
         console.log('Insertion successful');
+
+        const userID = rows.insertId;
 
         // Fetch the newly added user
         const query2 = `
@@ -148,7 +155,7 @@ router.post('/add', function (req, res) {
                 u.userEmail,
                 u.password
             FROM Users u
-            WHERE u.userID = LAST_INSERT_ID();
+            WHERE u.userID = ${userID};
         `;
 
         db.pool.query(query2, function (error, rows) {
