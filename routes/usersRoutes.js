@@ -20,43 +20,18 @@ router.get('/', function (req, res) {
         FROM Users u
     `;
 
-    // const transactionsQuery = `
-    //     SELECT transactionID AS id, description
-    //     FROM Transactions;
-    // `;
-
-    // const tagsQuery = `
-    //     SELECT tagID AS id, tagName
-    //     FROM Tags;
-    // `;
-
-    // Fetch: all records in TransactionTags, Transactions and Tags (to populate dropdowns)
+    // Fetch: all records in Users (to populate dropdowns)
     db.pool.query(usersQuery, (error, usersRows) => {
         if (error) {
             console.error('Error executing query for users:', error);
             return res.status(500).send("Error retrieving users.");
         }
 
-        // db.pool.query(transactionsQuery, (error, transactionRows) => {
-        //     if (error) {
-        //         console.error('Error fetching transactions:', error);
-        //         return res.status(500).send("Error fetching transactions.");
-        //     }
-
-        //     db.pool.query(tagsQuery, (error, tagRows) => {
-        //         if (error) {
-        //             console.error('Error fetching tags:', error);
-        //             return res.status(500).send("Error fetching tags.");
-        //         }
-
         res.render('users.hbs', {
             data: usersRows, // Data for the table
-            // transactions: transactionRows, // Data for transaction dropdown
-            // tags: tagRows, // Data for tag dropdown
         });
-        console.log(usersRows)
-        //     });
-        // });
+        console.log(usersRows);
+
     });
 });
 
@@ -66,7 +41,7 @@ router.get('/filter', function (req, res) {
 
     let filterQuery;
 
-    // if there a transaction ID then query only records with that ID
+    // if there a user ID then query only records with that ID
     if (userID) {
         filterQuery = `
             SELECT 
@@ -77,7 +52,7 @@ router.get('/filter', function (req, res) {
             FROM Users u
             WHERE u.userID = ${userID};
         `;
-    } else { // no transaction ID then querying all records
+    } else { // no user ID then querying all records
         filterQuery = `
             SELECT * from Users
         `;
