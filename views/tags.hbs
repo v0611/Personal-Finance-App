@@ -1,0 +1,53 @@
+{{!
+/* Code citation
+Date: 11/20/2024
+Adapted: all code adapted from starter app
+From: cs340-nodejs-starter-app
+*/}}
+
+<h1>View and Add Tags</h1>
+<!-- Dropdown for Filtering -->
+<form id="tag-filter-form">
+    <label for="tagFilter">Filter by Tag:</label>
+    <select id="tagFilter" name="tagID">
+        <option value="">Tags</option>
+        {{#each data}}
+        <option value="{{this.tagID}}">{{this.tagName}}</option>
+        {{/each}}
+    </select>
+</form>
+
+<!-- Data table -->
+<table id="tags">
+    <thead>
+        <tr>
+            <th>Tag ID</th>
+            <th>Tag Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each data}}
+        <tr>
+            <td>{{this.tagID}}</td>
+            <td>{{this.tagName}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+
+<h2>Add a New Tag</h2>
+
+{{!-- input field to put in tag name --}}
+
+<form id="add-new-tags">
+  <label for="tname">Tag Name:</label>
+  <input type="text" id="tag-name" name="tag-name"><br><br>
+  <input type="submit" value="Submit">
+</form>
+
+
+
+<script src="/js/add_tags.js"></script>
+<script src="/js/select_tags.js"></script>
+
+
