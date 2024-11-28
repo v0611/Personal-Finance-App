@@ -34,9 +34,26 @@ updateTableBody.addEventListener("click", (e) => {
             })
             .then(() => {
                 console.log(`Transaction ID ${transactionID} updated successfully.`);
-
-                // TODO: Update the name of the tag displayed in the table
-                // e.target.parent.parent.children[2].textContent = ;
+        
+                // Fetch the updated tag name from the /tags endpoint
+                return fetch('/tags')
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Failed to fetch tags');
+                        }
+                        return response.json();
+                    })
+                    .then(tags => {
+                        // Find the tag name corresponding to the updated tagID
+                        const updatedTag = tags.find(tag => tag.id === parseInt(tagID));
+                        if (updatedTag) {
+                            // Update the tag name in the table dynamically
+                            const tagNameCell = e.target.closest('tr').children[2]; // Adjust index to match the Tag column
+                            tagNameCell.textContent = updatedTag.tagName;
+                        } else {
+                            console.error('Updated tag not found in fetched tags.');
+                        }
+                    });
             })
             .catch(error => console.error('Error:', error));
     }

@@ -130,11 +130,6 @@ router.post('/add', function (req, res) {
 
     const { userID, categoryID, amount, date, description, tags } = req.body;
 
-    // Validate required fields
-    if (!userID || !categoryID || !amount || !date) {
-        return res.status(400).send("Missing required fields.");
-    }
-
     // Insert the new transaction into the Transactions table
     const query1 = `
         INSERT INTO Transactions (userID, categoryID, amount, date, description) 
