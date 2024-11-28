@@ -74,7 +74,7 @@ function addNewUserRow(data) {
         <td>${data.userID}</td>
         <td>${data.userName}</td>
         <td>${data.userEmail}</td>
-        <td>${data.userPassword}</td>
+        <td>${data.password}</td>
     `;
 
     // Append the new row to the table body
