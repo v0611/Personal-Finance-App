@@ -4,20 +4,20 @@ Adapted: Event Listener setup from startercode
 From: cs340-nodejs-starter-app, MDN web docs on textcontext
 */
 
-console.log("select_users.js loaded");
+console.log("select_tags.js loaded");
 
 // Select the dropdown and table body
-const userFilter = document.getElementById("userFilter");
-const tableBody = document.querySelector("#users tbody");
+const tagsFilter = document.getElementById("tagFilter");
+const tableBody = document.querySelector("#tags tbody");
 
 // Event listener for dropdown change
-userFilter.addEventListener("change", (e) => {
-    const selectedUserID = e.target.value;
+tagFilter.addEventListener("change", (e) => {
+    const selectedTagID = e.target.value;
 
     // Determine the URL to fetch data
-    let url = selectedUserID
-        ? `/users/filter?userID=${selectedUserID}`
-        : '/users/filter';
+    let url = selectedTagID
+        ? `/tags/filter?tagID=${selectedTagID}`
+        : '/tags/filter';
 
     console.log(`Fetching data from: ${url}`); // Debugging
 
@@ -47,10 +47,8 @@ function updateTable(data) {
         const newRow = document.createElement("tr");
 
         newRow.innerHTML = `
-            <td>${row.userID}</td>
-            <td>${row.userName}</td>
-            <td>${row.userEmail}</td>
-            <td>${row.password}</td>
+            <td>${row.tagID}</td>
+            <td>${row.tagName}</td>
         `;
 
         // Append the new row to the table body

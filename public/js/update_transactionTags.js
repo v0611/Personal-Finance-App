@@ -32,11 +32,13 @@ updateTableBody.addEventListener("click", (e) => {
                 }
                 return response.json();
             })
-            .then(() => {
+            .then(updatedRecord => {
                 console.log(`Transaction ID ${transactionID} updated successfully.`);
 
                 // TODO: Update the name of the tag displayed in the table
-                // e.target.parent.parent.children[2].textContent = ;
+                const row = e.target.closest("tr"); // Get the row containing the clicked button
+                row.children[2].textContent = updatedRecord.tagName; // Assuming the 3rd column is the tag name
+                console.log('Tag updated to:', updatedRecord.tagName);
             })
             .catch(error => console.error('Error:', error));
     }
