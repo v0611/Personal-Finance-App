@@ -5,57 +5,59 @@ Adapted: all code adapted from starter app
 From: cs340-nodejs-starter-app
 */}}
 
-<h1>View and Add Users</h1>
+<h1>View and Add Categories</h1>
 <!-- Dropdown for Filtering -->
-<form id="user-filter-form">
-    <label for="userFilter">Filter by User Name:</label>
-    <select id="userFilter" name="userID">
-        <option value="">Users</option>
+<form id="category-filter-form">
+    <label for="categoryFilter">Filter by Category Name:</label>
+    <select id="categoryFilter" name="categoryID">
+        <option value="">Categories</option>
         {{#each data}}
-        <option value="{{this.userID}}">{{this.userName}}</option>
+        <option value="{{this.categoryID}}">{{this.categoryName}}</option>
         {{/each}}
     </select>
 </form>
 
 <!-- Data table -->
-<table id="users">
+<table id="categories">
     <thead>
         <tr>
-            <th>User ID</th>
-            <th>User Name</th>
-            <th>User Email</th>
-            <th>User Password</th>
+            <th>Category ID</th>
+            <th>Category Name</th>
+            <th>Category Type</th>
         </tr>
     </thead>
     <tbody>
         {{#each data}}
         <tr>
-            <td>{{this.userID}}</td>
-            <td>{{this.userName}}</td>
-            <td>{{this.userEmail}}</td>
-            <td>{{this.password}}</td>
+            <td>{{this.categoryID}}</td>
+            <td>{{this.categoryName}}</td>
+            <td>{{this.categoryType}}</td>
         </tr>
         {{/each}}
     </tbody>
 </table>
 
-<h2>Add a New User</h2>
+<h2>Add a New Category</h2>
 
-{{!-- input fields for ppl to put in username, email and password --}}
+{{!-- input fields for ppl to put in category name, drop down for category type --}}
 
-<form id="add-new-users">
-  <label for="fname">User Name:</label>
-  <input type="text" id="user-name" name="user-name"><br><br>
-  <label for="user-email">User Email:</label>
-  <input type="text" id="user-email" name="user-email"><br><br>
-  <label for="password">Password:</label>
-  <input type="text" id="password" name="password"><br><br>
+<form id="add-new-category">
+  <label for="category-name">Category Name:</label>
+  <input type="text" id="category-name" name="category-name"><br><br>
+  <label for="category-type">Category Type:</label>
+  <select name="categoryID" id="categoryID" required>
+      <option value="">Select a Category Type</option>
+      {{#each tags}}
+      <option value="{{this.categoryType}}">{{this.categoryType}}</option>
+      {{/each}}
+  </select>
+  
   <input type="submit" value="Submit">
 </form>
 
 
 
-<script src="/js/add_users.js"></script>
-<script src="/js/select_users.js"></script>
+<script src="/js/add_categories.js"></script>
+<script src="/js/select_categories.js"></script>
 
 
