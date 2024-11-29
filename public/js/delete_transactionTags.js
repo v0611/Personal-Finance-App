@@ -1,7 +1,7 @@
 /* Code citation
 Date: 11/20/2024
 Adapted: Event Listener setup from startercode
-From: cs340-nodejs-starter-app, MDN web docs on textcontext
+From: cs340-nodejs-starter-app, Dynamically Updating Data
 */
 
 console.log("delete_transactionTags.js loaded");

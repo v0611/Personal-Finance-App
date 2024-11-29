@@ -1,0 +1,63 @@
+{{!
+/* Code citation
+Date: 11/20/2024
+Adapted: all code adapted from starter app
+From: cs340-nodejs-starter-app
+*/}}
+
+<h1>View and Add Categories</h1>
+<!-- Dropdown for Filtering -->
+<form id="category-filter-form">
+    <label for="categoryFilter">Filter by Category Name:</label>
+    <select id="categoryFilter" name="categoryID">
+        <option value="">Categories</option>
+        {{#each data}}
+        <option value="{{this.categoryID}}">{{this.categoryName}}</option>
+        {{/each}}
+    </select>
+</form>
+
+<!-- Data table -->
+<table id="categories">
+    <thead>
+        <tr>
+            <th>Category ID</th>
+            <th>Category Name</th>
+            <th>Category Type</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each data}}
+        <tr>
+            <td>{{this.categoryID}}</td>
+            <td>{{this.categoryName}}</td>
+            <td>{{this.categoryType}}</td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+
+<h2>Add a New Category</h2>
+
+{{!-- input fields for ppl to put in category name, drop down for category type --}}
+
+<form id="add-new-category">
+  <label for="category-name">Category Name:</label>
+  <input type="text" id="category-name" name="category-name"><br><br>
+  <label for="category-type">Category Type:</label>
+  <select name="categoryID" id="categoryID" required>
+      <option value="">Select a Category Type</option>
+      {{#each tags}}
+      <option value="{{this.categoryType}}">{{this.categoryType}}</option>
+      {{/each}}
+  </select>
+  
+  <input type="submit" value="Submit">
+</form>
+
+
+
+<script src="/js/add_categories.js"></script>
+<script src="/js/select_categories.js"></script>
+
+

@@ -14,6 +14,8 @@ var db = require('./database/db-connector');
 const transactionTagsRoutes = require('./routes/transactionTagsRoutes');
 const transactionsRoutes = require('./routes/transactionsRoutes');
 const userRoutes = require('./routes/usersRoutes');
+const tagsRoutes = require('./routes/tagsRoutes');
+const categoriesRoutes = require('./routes/categoriesRoutes');
 
 app.use(express.urlencoded({ extended: true })); // Parse URL-encoded form data
 
@@ -51,6 +53,8 @@ app.get('/', function (req, res) {
 app.use('/transactiontags', transactionTagsRoutes);
 app.use('/transactions', transactionsRoutes);
 app.use('/users', userRoutes);
+app.use('/tags', tagsRoutes);
+app.use('/categories', categoriesRoutes);
 
 
 /*

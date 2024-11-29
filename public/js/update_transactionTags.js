@@ -32,8 +32,9 @@ updateTableBody.addEventListener("click", (e) => {
                 }
                 return response.json();
             })
-            .then(() => {
+            .then(updatedRecord => {
                 console.log(`Transaction ID ${transactionID} updated successfully.`);
+// <<<<<<< merge-conflict
         
                 // Fetch the updated tag name from the /tags endpoint
                 return fetch('/tags')
@@ -54,6 +55,13 @@ updateTableBody.addEventListener("click", (e) => {
                             console.error('Updated tag not found in fetched tags.');
                         }
                     });
+// =======
+
+//                 // TODO: Update the name of the tag displayed in the table
+//                 const row = e.target.closest("tr"); // Get the row containing the clicked button
+//                 row.children[2].textContent = updatedRecord.tagName; // Assuming the 3rd column is the tag name
+//                 console.log('Tag updated to:', updatedRecord.tagName);
+// >>>>>>> main
             })
             .catch(error => console.error('Error:', error));
     }

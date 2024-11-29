@@ -56,6 +56,7 @@ router.get('/', function (req, res) {
                     transactions: transactionRows, // Data for transaction dropdown
                     tags: tagRows, // Data for tag dropdown
                 });
+                console.log(transactionTagsRows)
             });
         });
     });
