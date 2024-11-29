@@ -1,3 +1,4 @@
+
 /* Code citation
 Date: 11/21/2024
 Adapted: Dynamically Updating Data
@@ -34,34 +35,11 @@ updateTableBody.addEventListener("click", (e) => {
             })
             .then(updatedRecord => {
                 console.log(`Transaction ID ${transactionID} updated successfully.`);
-// <<<<<<< merge-conflict
-        
-                // Fetch the updated tag name from the /tags endpoint
-                return fetch('/tags')
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Failed to fetch tags');
-                        }
-                        return response.json();
-                    })
-                    .then(tags => {
-                        // Find the tag name corresponding to the updated tagID
-                        const updatedTag = tags.find(tag => tag.id === parseInt(tagID));
-                        if (updatedTag) {
-                            // Update the tag name in the table dynamically
-                            const tagNameCell = e.target.closest('tr').children[2]; // Adjust index to match the Tag column
-                            tagNameCell.textContent = updatedTag.tagName;
-                        } else {
-                            console.error('Updated tag not found in fetched tags.');
-                        }
-                    });
-// =======
 
-//                 // TODO: Update the name of the tag displayed in the table
-//                 const row = e.target.closest("tr"); // Get the row containing the clicked button
-//                 row.children[2].textContent = updatedRecord.tagName; // Assuming the 3rd column is the tag name
-//                 console.log('Tag updated to:', updatedRecord.tagName);
-// >>>>>>> main
+                // TODO: Update the name of the tag displayed in the table
+                const row = e.target.closest("tr"); // Get the row containing the clicked button
+                row.children[2].textContent = updatedRecord.tagName; // Assuming the 3rd column is the tag name
+                console.log('Tag updated to:', updatedRecord.tagName);
             })
             .catch(error => console.error('Error:', error));
     }
